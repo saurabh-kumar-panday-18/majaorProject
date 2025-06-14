@@ -10,6 +10,7 @@ const Schema =  mongoose.Schema;
          type: String,
          required: true,
     },
+    
     description: String,
     image:{
              url:String,

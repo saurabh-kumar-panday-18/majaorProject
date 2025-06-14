@@ -1,6 +1,8 @@
-if(process.env.NODE_ENV!= " production"){
+if(process.env.NODE_ENV != "production"){
    require("dotenv").config();
 }
+
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -35,6 +37,7 @@ const userRouter = require("./routes/user.js");
     await mongoose.connect(dbUrl);
  }
 
+ 
    app.set("view engine","ejs");
    app.set("views",path.join(__dirname,"views"));
    app.use(express.urlencoded({extended: true}));
@@ -44,6 +47,7 @@ const userRouter = require("./routes/user.js");
 
   const store = MongoStore.create({
    mongoUrl: dbUrl,
+   
    crypto:{
       secret: process.env.SECRET,
    },
@@ -69,20 +73,25 @@ const userRouter = require("./routes/user.js");
     app.use(session(sessionOptions));
     app.use(flash());
 
+
     app.use(passport.initialize());
     app.use(passport.session());
-    passport.use(new LocalStrategy(User.authenticate()));
+      
 
+    passport.use(new LocalStrategy(User.authenticate()));
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
 
-      app.use((req,res,next)=>{
+    app.use((req,res,next)=>{
       res.locals.success = req.flash("success");
       res.locals.error = req.flash("error");
       res.locals.currUser = req.user;
+      
       next();
      });
+
+      
 
    //   app.get("/demouser", async(req, res)=>{
    //       let fakeUser = new User({
@@ -114,3 +123,4 @@ const userRouter = require("./routes/user.js");
  app.listen(8080,()=>{
     console.log("server  is Listening to port 8080");
   });
+
